@@ -50,6 +50,7 @@ button.s{background:#fff;color:var(--t);box-shadow:0 3px 0 #d9cfa5;padding:6px 1
 .c.sel{box-shadow:0 0 0 3px #4a90d9}
 </style></head><body><div class="w">
 <h1>🏝️ 小島放假行事曆</h1>
+<div id="mode" style="text-align:center;font-size:13px;margin:-8px 0 12px;color:#8a7a68"></div>
 <div class="card" id="me"></div>
 <div class="card" style="padding:10px"><b>🏘️ 今天的小島村莊</b><div class="vil" id="vil" style="margin-top:8px"></div></div>
 <div class="card" id="ban" style="text-align:center;font-size:18px"></div>
@@ -90,6 +91,8 @@ const H=(skin,hair,st,bg,shirt,smile)=>{const q=hp(skin,hair,st,smile);return S(
 const HF=(skin,hair,st,bg,shirt,smile)=>{const q=hp(skin,hair,st,smile),T='transform="translate(50 45) scale(1.18) translate(-50 -52)"',L=c=>ov('rect',`x="${c}" y="100" width="11" height="20" rx="5"`,"#5c6f99");
  return F(`${SH}${L(36)}${L(53)}<ellipse cx="41" cy="121" rx="8" ry="4.5" fill="#8a5a3a"/><ellipse cx="59" cy="121" rx="8" ry="4.5" fill="#8a5a3a"/><g ${T}>${q.back}</g>${ov('rect','x="30" y="74" width="40" height="34" rx="16"',shirt)}${ov('ellipse','cx="26" cy="90" rx="6" ry="12"',shirt)}${ov('ellipse','cx="74" cy="90" rx="6" ry="12"',shirt)}<circle cx="25" cy="101" r="4.8" fill="${skin}"/><circle cx="75" cy="101" r="4.8" fill="${skin}"/><rect x="43" y="70" width="14" height="10" rx="5" fill="${skin}"/><g ${T}>${q.front}</g>`)};
 const mk=(id,n,...a)=>({id,n,s:H(...a),f:HF(...a)});
+// 自訂圖片角色：img("代號","名稱","圖片網址或路徑")，圖片建議透明背景 PNG、直立全身
+const img=(id,n,u)=>({id,n,s:S(`${BG("#eef6ff")}<g clip-path="url(#k)"><image href="${u}" x="5" y="5" width="90" height="90" preserveAspectRatio="xMidYMin meet"/></g>`),f:F(`${SH}<image href="${u}" x="0" y="0" width="100" height="124" preserveAspectRatio="xMidYMax meet"/>`)});
 const CAT=`<path d="M20 42L22 10L46 28Z" fill="#f0b55a"/><path d="M80 42L78 10L54 28Z" fill="#f0b55a"/><path d="M26 34L27 18L38 28Z" fill="#f6a5a5"/><path d="M74 34L73 18L62 28Z" fill="#f6a5a5"/>${ov('ellipse','cx="50" cy="56" rx="33" ry="29"',"#f4c26b")}<path d="M50 30V38M43 31L44.5 37M57 31L55.5 37" stroke="#d99a3d" stroke-width="3" fill="none" stroke-linecap="round"/>${ov('ellipse','cx="50" cy="68" rx="17" ry="13"',"#fff")}${EY(38,55)}${EY(62,55)}<path d="M47 62L53 62L50 66Z" fill="#f08a8a"/><path d="M50 66Q46 72 42 69M50 66Q54 72 58 69" stroke="#333" stroke-width="2" fill="none" stroke-linecap="round"/><ellipse cx="30" cy="64" rx="5" ry="3" fill="#ff8f88" opacity=".5"/><ellipse cx="70" cy="64" rx="5" ry="3" fill="#ff8f88" opacity=".5"/>`;
 const DOG=`${ov('ellipse','cx="22" cy="46" rx="11" ry="22"',"#9b6b43")}${ov('ellipse','cx="78" cy="46" rx="11" ry="22"',"#9b6b43")}${ov('ellipse','cx="50" cy="54" rx="29" ry="28"',"#e3b987")}${ov('ellipse','cx="50" cy="68" rx="16" ry="12"',"#fff")}${EY(38,50)}${EY(62,50)}<ellipse cx="50" cy="62" rx="6.5" ry="4.8" fill="#2d2420"/><ellipse cx="48" cy="60.5" rx="2" ry="1.2" fill="#fff" opacity=".7"/><path d="M50 66V71M50 71Q45 76 41 72M50 71Q55 76 59 72" stroke="#2d2420" stroke-width="2" fill="none" stroke-linecap="round"/><ellipse cx="30" cy="62" rx="5" ry="3" fill="#ff8f88" opacity=".5"/><ellipse cx="70" cy="62" rx="5" ry="3" fill="#ff8f88" opacity=".5"/>`;
 const PT=`transform="translate(50 46) scale(.92) translate(-50 -52)"`;
@@ -104,7 +107,9 @@ mk("b1","短髮男孩","#ffe0c8","#3b2a22","buzz","#d8ecff","#6aa7e0"),
 mk("b2","捲髮男孩","#e9c09b","#2a2020","curl","#f1e3ff","#b08be0"),
 mk("b3","陽光男孩","#ffe0c8","#8a5a2b","side","#ffeccf","#f2b84b",1),
 mk("k1","韓系暖男","#fff0e2","#2b2433","side","#ecebff","#e8e2d6"),
-mk("k2","韓系開朗哥","#fbe3cf","#1f1a1a","buzz","#e1f5f0","#f5f5f5",1)];
+mk("k2","韓系開朗哥","#fbe3cf","#1f1a1a","buzz","#e1f5f0","#f5f5f5",1)
+ // ,img("my1","我的角色","chars/my1.png")   ← 想新增圖片角色就取消註解並改名稱與路徑
+];
 const avOf=id=>(AV.find(a=>a.id==id)||AV[0]).s,fOf=id=>(AV.find(a=>a.id==id)||AV[0]).f;
 // ===== 狀態與資料 =====
 const $=s=>document.querySelector(s),esc=s=>String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
@@ -112,7 +117,8 @@ const ds=d=>d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+Strin
 let people=[],my=null,sel=null,pick="cat",cur=new Date();cur.setDate(1);
 try{my=JSON.parse(localStorage.getItem("islandMe"))}catch(e){}
 if(my)pick=my.avatar;
-async function load(){try{people=API_URL?(await (await fetch(API_URL)).json()).people:JSON.parse(localStorage.getItem("islandAll")||"[]")}catch(e){}
+let modeTxt="";
+async function load(){try{people=API_URL?(await (await fetch(API_URL)).json()).people:JSON.parse(localStorage.getItem("islandAll")||"[]");modeTxt=API_URL?"☁️ 已連線試算表・目前 "+people.length+" 人登島":"💾 本機試玩模式：資料只存在這個瀏覽器，不會同步給別人（請設定 API_URL）"}catch(e){modeTxt="⚠️ 連不上試算表，請檢查 API_URL 與部署權限"}
  if(my){const s=people.find(p=>p.id==my.id);if(s){my.leaves=s.leaves;my.dest=s.dest||my.dest}}render()}
 let tm;function save(){clearTimeout(tm);tm=setTimeout(async()=>{
  const i=people.findIndex(p=>p.id==my.id);i<0?people.push(my):people[i]=my;
@@ -136,6 +142,7 @@ function village(L){
  $("#vil").innerHTML=`<span class="cl">☁️</span><span class="cl" style="top:14px;animation-delay:-25s;font-size:24px">☁️</span><span class="dc" style="left:1%;top:34%">🌳</span><span class="dc" style="right:1%;top:40%">🌲</span><div class="vg">${L.length?L.map(lot).join(""):"<small>村莊還沒有居民～先在上方設定名字與角色吧！</small>"}</div>`}
 // ===== 畫面 =====
 function render(){
+ $("#mode").textContent=modeTxt;
  $("#me").innerHTML=(my?`<div class="row"><div style="width:64px">${avOf(my.avatar)}</div><b>${esc(my.name)}</b><button class="s" id="ed">換角色／改名</button></div>`:`<b>👋 歡迎登島！先取個名字、選個角色</b>`)+
  `<div id="setup" style="${my?'display:none':''}"><div class="row" style="margin-top:10px"><input id="nm" maxlength="12" placeholder="你的名字" value="${my?esc(my.name):''}"><button id="ok">確定</button></div><div class="av">${AV.map(a=>`<div data-a="${a.id}" class="${a.id==pick?'on':''}">${a.f}${a.n}</div>`).join("")}</div></div>`;
  if($("#ed"))$("#ed").onclick=()=>$("#setup").style.display="block";
