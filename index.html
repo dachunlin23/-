@@ -47,6 +47,8 @@ button.s{background:#fff;color:var(--t);box-shadow:0 3px 0 #d9cfa5;padding:6px 1
 .walk{animation:bob .8s ease-in-out infinite}
 .nm{font-weight:800;font-size:13px;background:#fffc;border-radius:10px;padding:1px 8px;display:inline-block}.nm small{display:block;font-weight:600;font-size:11px;color:#8a7a68}
 @media(max-width:560px){.lot{width:44%}.vg{gap:26px 6px}.vil{padding:40px 8px 20px}}
+.c.bz{background:#d6e9fb;outline:3px solid #6aa7e0}.dots .b svg{outline:2px solid #6aa7e0;border-radius:50%}.bag.bz{background:#4a90d9;border-color:#2f6fb0}.sgb.bz{background:#cfe4f7;border-color:#4a90d9;color:#1f4f85}.bag{white-space:pre-line}.p .big{font-size:18px}
+select{padding:10px;border:2px solid #d9cfa5;border-radius:14px;font-size:15px;background:#fff}
 .c.sel{box-shadow:0 0 0 3px #4a90d9}
 </style></head><body><div class="w">
 <h1>🏝️ 小島放假行事曆</h1>
@@ -57,11 +59,11 @@ button.s{background:#fff;color:var(--t);box-shadow:0 3px 0 #d9cfa5;padding:6px 1
 <div class="card"><b>🎉 大家的放假倒數</b><div class="board" id="board" style="margin-top:10px"></div></div>
 <div class="card"><div class="nav"><button class="s" id="pv">◀</button><b id="ttl"></b><button class="s" id="nx">▶</button></div>
 <div class="g" id="cal"></div>
-<div id="bar" style="margin-top:10px"></div><small style="display:block;margin-top:8px">點日期選取 → 按「設為休假」；也可填那天要去哪，村莊裡的背包會寫上。綠色＝我的休假，粉色＝週末，紅色＝國定假日。</small></div>
+<div id="bar" style="margin-top:10px"></div><small style="display:block;margin-top:8px">點日期選取 → 按「設為休假」；也可填那天要去哪，村莊裡的背包會寫上。綠色＝我的休假，藍色＝出差，粉色＝週末，紅色＝國定假日。</small></div>
 </div>
 <script>
 // ===== 設定 =====
-const API_URL = "https://script.google.com/macros/s/AKfycbwyOPHjrxdYOg16vAdGsgtaCJWa3TF_mnNQlOeHlWRErONKlpGWsChW0oG5G06LGag/exec"; // 貼上 Google Apps Script 網頁應用程式網址；留空＝本機試玩模式
+const API_URL = ""; // 貼上 Google Apps Script 網頁應用程式網址；留空＝本機試玩模式
 const HOL = {   // 國定假日（週末不用填，系統自動算）
   "2026-01-01":"開國紀念日",
   "2026-02-16":"除夕","2026-02-17":"春節初一","2026-02-18":"春節初二","2026-02-19":"春節初三","2026-02-20":"小年夜補假",
@@ -99,6 +101,9 @@ const PT=`transform="translate(50 46) scale(.92) translate(-50 -52)"`;
 // 原創小外星人：雙觸角＋肚子星星徽章
 const ALH=c=>`<path d="M40 30Q36 16 30 11M60 30Q64 16 70 11" stroke="${c}" stroke-width="3.5" fill="none" stroke-linecap="round"/><circle cx="30" cy="9.5" r="5.5" fill="#ffd95a"/><circle cx="70" cy="9.5" r="5.5" fill="#ffd95a"/><circle cx="28.5" cy="8" r="1.8" fill="#fff" opacity=".8"/><circle cx="68.5" cy="8" r="1.8" fill="#fff" opacity=".8"/>${ov('ellipse','cx="50" cy="52" rx="30" ry="27"',c)}${EY(39,52)}${EY(61,52)}<ellipse cx="31" cy="62" rx="5" ry="3" fill="#ff8f88" opacity=".55"/><ellipse cx="69" cy="62" rx="5" ry="3" fill="#ff8f88" opacity=".55"/><path d="M44 62Q50 68 56 62" stroke="#3a3a4a" stroke-width="2.5" fill="none" stroke-linecap="round"/>`;
 const al=(id,n,c,d,bg)=>({id,n,s:S(`${BG(bg)}<g clip-path="url(#k)">${ov('ellipse','cx="50" cy="100" rx="32" ry="24"',c)}${ALH(c)}</g>`),f:F(`${SH}${ov('ellipse','cx="40" cy="121" rx="9" ry="5"',d)}${ov('ellipse','cx="60" cy="121" rx="9" ry="5"',d)}${ov('ellipse','cx="50" cy="97" rx="25" ry="25"',c)}<path d="M50 89L52.4 95.2L59 95.4L53.8 99.4L55.6 105.8L50 102L44.4 105.8L46.2 99.4L41 95.4L47.6 95.2Z" fill="#fff" opacity=".85"/>${ov('ellipse','cx="26" cy="94" rx="5.5" ry="9"',c)}${ov('ellipse','cx="74" cy="94" rx="5.5" ry="9"',c)}<g transform="translate(50 48) scale(.9) translate(-50 -52)">${ALH(c)}</g>`)});
+// 原創噴火小龍：圓角小龍＋紫色小翅膀＋嘴邊噴小火花
+const DRH=`${ov('path','d="M30 34Q22 14 14 12Q20 28 24 40Z"',"#ffe2a8")}${ov('path','d="M70 34Q78 14 86 12Q80 28 76 40Z"',"#ffe2a8")}${ov('ellipse','cx="50" cy="54" rx="31" ry="27"',"#e8605a")}${ov('ellipse','cx="50" cy="66" rx="14" ry="10"',"#ffe2a8")}<ellipse cx="45" cy="65" rx="1.6" ry="1.2" fill="#a5483f"/><ellipse cx="55" cy="65" rx="1.6" ry="1.2" fill="#a5483f"/>${EY(37,50)}${EY(63,50)}<ellipse cx="29" cy="60" rx="5" ry="3" fill="#ff9b94" opacity=".6"/><ellipse cx="71" cy="60" rx="5" ry="3" fill="#ff9b94" opacity=".6"/><path d="M44 71Q50 76 56 71" stroke="#a5483f" stroke-width="2.3" fill="none" stroke-linecap="round"/><path d="M62 70Q73 63 72 54Q80 62 84 70Q78 78 64 75Z" fill="#ffb020"/><path d="M66 70Q73 66 73 60Q77 65 78 70Q75 74 68 73Z" fill="#ffe066"/>`;
+const DRG={id:"dr1",n:"噴火小龍",s:S(`${BG("#ffe9d6")}<g clip-path="url(#k)">${ov('ellipse','cx="50" cy="100" rx="32" ry="24"',"#e8605a")}${DRH}</g>`),f:F(`${SH}<path d="M26 84Q4 70 6 98Q16 90 20 99Q22 91 30 95Z" fill="#9b7ed8"/><path d="M74 84Q96 70 94 98Q84 90 80 99Q78 91 70 95Z" fill="#9b7ed8"/><path d="M72 112Q96 112 92 96" stroke="#e8605a" stroke-width="9" fill="none" stroke-linecap="round"/>${ov('ellipse','cx="50" cy="97" rx="25" ry="25"',"#e8605a")}${ov('ellipse','cx="50" cy="102" rx="15" ry="17"',"#ffe2a8")}${ov('ellipse','cx="26" cy="94" rx="5.5" ry="9"',"#e8605a")}${ov('ellipse','cx="74" cy="94" rx="5.5" ry="9"',"#e8605a")}${ov('ellipse','cx="40" cy="121" rx="9" ry="5"',"#ffe2a8")}${ov('ellipse','cx="60" cy="121" rx="9" ry="5"',"#ffe2a8")}<g transform="translate(50 48) scale(.9) translate(-50 -52)">${DRH}</g>`)};
 const AV=[
 {id:"cat",n:"黃白貓咪",s:S(`${BG("#fde9c4")}<g clip-path="url(#k)">${ov('ellipse','cx="50" cy="100" rx="30" ry="22"',"#fff6e6")}${CAT}</g>`),f:F(`${SH}<path d="M70 108Q96 106 90 76" stroke="#f0b55a" stroke-width="9" fill="none" stroke-linecap="round"/>${ov('ellipse','cx="50" cy="98" rx="26" ry="24"',"#f4c26b")}${ov('ellipse','cx="50" cy="102" rx="15" ry="16"',"#fff")}${ov('ellipse','cx="37" cy="120" rx="9" ry="5"',"#fff")}${ov('ellipse','cx="63" cy="120" rx="9" ry="5"',"#fff")}<g ${PT}>${CAT}</g>`)},
 {id:"dog",n:"柔軟狗狗",s:S(`${BG("#d9ecf7")}<g clip-path="url(#k)">${ov('ellipse','cx="50" cy="100" rx="30" ry="22"',"#fff6e6")}${DOG}</g>`),f:F(`${SH}<path d="M72 108Q94 104 88 84" stroke="#9b6b43" stroke-width="8" fill="none" stroke-linecap="round"/>${ov('ellipse','cx="50" cy="98" rx="26" ry="24"',"#e3b987")}${ov('ellipse','cx="50" cy="102" rx="15" ry="16"',"#fff")}${ov('ellipse','cx="37" cy="120" rx="9" ry="5"',"#fff")}${ov('ellipse','cx="63" cy="120" rx="9" ry="5"',"#fff")}<g ${PT}>${DOG}</g>`)},
@@ -112,7 +117,8 @@ mk("b3","陽光男孩","#ffe0c8","#8a5a2b","side","#ffeccf","#f2b84b",1),
 mk("k1","韓系暖男","#fff0e2","#2b2433","side","#ecebff","#e8e2d6"),
 mk("k2","韓系開朗哥","#fbe3cf","#1f1a1a","buzz","#e1f5f0","#f5f5f5",1),
 al("al1","天藍小外星人","#7fd1e8","#4fa9c4","#e6f7fb"),
-al("al2","蜜桃小外星人","#ffb18a","#e0875e","#fff0e6")
+al("al2","蜜桃小外星人","#ffb18a","#e0875e","#fff0e6"),
+DRG
  // ,img("my1","我的角色","chars/my1.png")   ← 想新增圖片角色就取消註解並改名稱與路徑
 ];
 const avOf=id=>(AV.find(a=>a.id==id)||AV[0]).s,fOf=id=>(AV.find(a=>a.id==id)||AV[0]).f;
@@ -124,25 +130,37 @@ try{my=JSON.parse(localStorage.getItem("islandMe"))}catch(e){}
 if(my)pick=my.avatar;
 let modeTxt="";
 async function load(){try{people=API_URL?(await (await fetch(API_URL)).json()).people:JSON.parse(localStorage.getItem("islandAll")||"[]");modeTxt=API_URL?"☁️ 已連線試算表・目前 "+people.length+" 人登島":"💾 本機試玩模式：資料只存在這個瀏覽器，不會同步給別人（請設定 API_URL）"}catch(e){modeTxt="⚠️ 連不上試算表，請檢查 API_URL 與部署權限"}
- if(my){const s=people.find(p=>p.id==my.id);if(s){my.leaves=s.leaves;my.dest=s.dest||my.dest}}render()}
+ if(my){const s=people.find(p=>p.id==my.id);if(s){my.leaves=s.leaves;my.dest=s.dest||my.dest;my.biz=s.biz||my.biz;my.early=s.early||my.early}}render()}
 let tm;function save(){clearTimeout(tm);tm=setTimeout(async()=>{
  const i=people.findIndex(p=>p.id==my.id);i<0?people.push(my):people[i]=my;
  localStorage.setItem("islandMe",JSON.stringify(my));
  try{API_URL?await fetch(API_URL,{method:"POST",headers:{"Content-Type":"text/plain"},body:JSON.stringify(my)}):localStorage.setItem("islandAll",JSON.stringify(people))}catch(e){alert("儲存失敗，請稍後再試")}},400)}
 const isOff=(p,d)=>{const w=d.getDay(),k=ds(d);return w==0||w==6?"週末":HOL[k]?HOL[k]:(p.leaves||[]).includes(k)?"休假":null};
-function next(p){const t=new Date();t.setHours(0,0,0,0);for(let i=0;i<400;i++){const d=new Date(t);d.setDate(t.getDate()+i);const r=isOff(p,d);if(r){let n=1;for(;n<60;n++){const e=new Date(d);e.setDate(d.getDate()+n);if(!isOff(p,e))break}return{i,r,n,d}}}return{i:999,n:0}}
+const fmtLeft=ms=>{const m=Math.floor(ms/6e4),d=Math.floor(m/1440),h=Math.floor(m%1440/60);return d>0?d+" 天 "+h+" 小時":h>0?h+" 小時 "+(m%60)+" 分":(m%60)+" 分鐘"};
+// 下班時間 18:00：假期前一天 18:00 起就算放假
+const offAt=(p,d)=>{const e=((p&&p.early)||{})[ds(d)]||"18:00",[h,m]=e.split(":"),x=new Date(d);x.setHours(+h,+m,0,0);return x};
+function next(p){const now=new Date(),t=new Date(now);t.setHours(0,0,0,0);for(let i=0;i<400;i++){const d=new Date(t);d.setDate(t.getDate()+i);const r=isOff(p,d);if(r){let n=1;for(;n<60;n++){const e=new Date(d);e.setDate(d.getDate()+n);if(!isOff(p,e))break}
+ let st=now;if(i>0){const pv=new Date(d);pv.setDate(d.getDate()-1);st=offAt(p,pv)}return{i,r,n,d,ms:st-now}}}return{i:999,n:0,ms:1e15}}
+function nextLong(p){const now=new Date(),t=new Date(now);t.setHours(0,0,0,0);const D=i=>{const d=new Date(t);d.setDate(t.getDate()+i);return d},pub=d=>d.getDay()%6==0||HOL[ds(d)];
+ for(let i=0;i<400;){if(!pub(D(i))){i++;continue}let j=i;while(j<i+30&&pub(D(j)))j++;
+  if(j-i>=3){let nm="週末";for(let q=i;q<j;q++){const h=HOL[ds(D(q))];if(h){nm=h;break}}let st=now;if(i>0)st=offAt(p,D(i-1));return{i,L:j-i,d:D(i),nm,ms:st-now}}i=j}return null}
 // ===== 村莊 =====
 function village(L){
- const t=new Date();t.setHours(0,0,0,0);const tm=new Date(t);tm.setDate(t.getDate()+1);const T=ds(t),M=ds(tm),cols=["#e8756b","#6aa7e0","#f2b84b","#7fc48a","#b08be0","#f4a261"];
- const nextPlan=p=>{const lv=p.leaves||[],dd=p.dest||{},f=x=>(x.getMonth()+1)+"/"+x.getDate();
-  for(let i=2;i<=30;i++){const d=new Date(t);d.setDate(t.getDate()+i);const k=ds(d);
-   if(lv.includes(k)||dd[k]){let e=d;for(;;){const n=new Date(e);n.setDate(e.getDate()+1);if(lv.includes(ds(n)))e=n;else break}
-    return{r:f(d)+(e>d?"–"+f(e):""),w:dd[k]?"去"+dd[k]:"休假",i}}}return null};
- const lot=(p,i)=>{const dd=p.dest||{},oT=isOff(p,t),oM=isOff(p,tm);let st="work",txt="",lb="上班中",y;
-  if(oT&&dd[T]){st="out";txt="去"+dd[T];lb="外出中"}else if(oT){st="sleep";lb="在家睡覺 💤"}else if((oM&&oM!="週末")||dd[M]){st="sign";txt=dd[M]?"明天去"+dd[M]:oM=="休假"?"明天休假":"明天"+oM;lb="明天放假！"}
-  else{const n=nextPlan(p);if(n){st="sign";txt=n.r+"\n"+n.w+"\n還有"+n.i+"天";lb="預計 "+n.r+" "+n.w}else if(oM){st="sign";txt="明天週末";lb="明天放假！"}}
+ const now=new Date(),t=new Date(now);t.setHours(0,0,0,0);const tm=new Date(t);tm.setDate(t.getDate()+1);const T=ds(t),M=ds(tm),cols=["#e8756b","#6aa7e0","#f2b84b","#7fc48a","#b08be0","#f4a261"];
+ const nextPlan=p=>{const lv=p.leaves||[],bz=p.biz||[],dd=p.dest||{},f=x=>(x.getMonth()+1)+"/"+x.getDate();
+  for(let i=2;i<=30;i++){const d=new Date(t);d.setDate(t.getDate()+i);const k=ds(d),b=bz.includes(k);
+   if(b||lv.includes(k)||dd[k]){const arr=b?bz:lv;let e=d;for(;;){const n=new Date(e);n.setDate(e.getDate()+1);if(arr.includes(ds(n)))e=n;else break}
+    return{r:f(d)+(e>d?"–"+f(e):""),w:b?"出差"+(dd[k]?" "+dd[k]:""):dd[k]?"去"+dd[k]:"休假",i,b}}}return null};
+ const lot=(p,i)=>{const dd=p.dest||{},bz=p.biz||[],oT=isOff(p,t),oM=isOff(p,tm),late=now>=offAt(p,t),eve=!oT&&late&&!!oM;let st="work",txt="",lb="上班中",bk="",y;
+  if(bz.includes(T)){st="out";bk="bz";txt="出差"+(dd[T]?"\n"+dd[T]:"");lb="出差中"}
+  else if(oT&&dd[T]){st="out";txt="去"+dd[T];lb="外出中"}
+  else if(oT||eve){st="sleep";lb=eve?"下班放假 💤":"在家睡覺 💤"}
+  else if(bz.includes(M)){st="sign";bk="bz";txt="明天出差"+(dd[M]?"\n"+dd[M]:"");lb="明天出差"}
+  else if((oM&&oM!="週末")||dd[M]){st="sign";txt=dd[M]?"明天去"+dd[M]:oM=="休假"?"明天休假":"明天"+oM;lb="明天放假！"}
+  else{const n=nextPlan(p);if(n){st="sign";bk=n.b?"bz":"";txt=n.r+"\n"+n.w+"\n還有"+n.i+"天";lb="預計 "+n.r+" "+n.w}else if(oM){st="sign";txt="明天週末";lb="明天放假！"}}
+  if(st=="work"&&late)lb=(p.early&&p.early[T])?"提早下班 👋":"下班囉 👋";
   const A=avOf(p.avatar),FB=fOf(p.avatar);
-  y=st=="sleep"?"":st=="out"?`<div class="pp walk">${FB}<div class="bag">${esc(txt)}</div></div>`:st=="sign"?`<div class="pp bob">${FB}</div><div class="sgb">${esc(txt)}</div>`:`<div class="pp bob">${FB}</div>`;
+  y=st=="sleep"?"":st=="out"?`<div class="pp walk">${FB}<div class="bag ${bk}">${esc(txt)}</div></div>`:st=="sign"?`<div class="pp bob">${FB}</div><div class="sgb ${bk}">${esc(txt)}</div>`:`<div class="pp bob">${FB}</div>`;
   return `<div class="lot ${st}"><div class="house" style="--c:${cols[i%6]}"><div class="roof"></div><div class="wall"><div class="door"></div><div class="win">${st=="sleep"?`<div class="bed">${A}</div>`:""}</div>${st=="sleep"?'<b class="z">💤</b>':""}</div></div><div class="yard">${y}</div><span class="nm">${esc(p.name)}<small>${lb}</small></span></div>`};
  $("#vil").innerHTML=`<span class="cl">☁️</span><span class="cl" style="top:14px;animation-delay:-25s;font-size:24px">☁️</span><span class="dc" style="left:1%;top:34%">🌳</span><span class="dc" style="right:1%;top:40%">🌲</span><div class="vg">${L.length?L.map(lot).join(""):"<small>村莊還沒有居民～先在上方設定名字與角色吧！</small>"}</div>`}
 // ===== 畫面 =====
@@ -153,23 +171,29 @@ function render(){
  if($("#ed"))$("#ed").onclick=()=>$("#setup").style.display="block";
  document.querySelectorAll(".av div").forEach(e=>e.onclick=()=>{pick=e.dataset.a;document.querySelectorAll(".av div").forEach(x=>x.classList.toggle("on",x==e))});
  $("#ok").onclick=()=>{const n=$("#nm").value.trim();if(!n)return alert("請輸入名字");
-  my={id:my?my.id:Date.now().toString(36)+Math.random().toString(36).slice(2,6),name:n,avatar:pick,leaves:my?my.leaves||[]:[]};save();render()};
+  my={...(my||{}),id:my?my.id:Date.now().toString(36)+Math.random().toString(36).slice(2,6),name:n,avatar:pick,leaves:my?my.leaves||[]:[]};save();render()};
  const L=people.filter(p=>!my||p.id!=my.id);if(my)L.unshift(my);village(L);
- {const t=new Date();t.setHours(0,0,0,0);const w=t.getDay(),k=Object.keys(HOL).sort().find(x=>x>=ds(t)),dh=k?Math.round((new Date(k+"T00:00:00")-t)/864e5):null;
-  $("#ban").innerHTML=(w==0||w==6?'<span class="big">週末快樂！🎉</span>':'🏖️ 距離週末還有 <span class="big">'+(6-w)+'</span> 天')+(k?'　｜　🎌 下個國定假日 <b>'+HOL[k]+'</b> '+(dh==0?'就是今天！':'還有 <span class="big">'+dh+'</span> 天'):'')}
- $("#board").innerHTML=L.map(p=>({p,x:next(p)})).sort((a,b)=>a.x.i-b.x.i).map(({p,x})=>`<div class="p">${avOf(p.avatar)}<div><b>${esc(p.name)}</b>${x.i==0?`<span class="big">今天放假！</span><small>連休 ${x.n} 天 🎈</small>`:x.i<999?`<span class="big">還有 ${x.i} 天</span><small>${x.d.getMonth()+1}/${x.d.getDate()} ${x.r}・連休 ${x.n} 天</small>`:"<small>近期沒有假期</small>"}</div></div>`).join("")||"<small>還沒有人登島～</small>";
+ {const now=new Date(),w=now.getDay(),f=x=>(x.getMonth()+1)+"/"+x.getDate();let wk;
+  if(w==0||w==6)wk='<span class="big">週末快樂！🎉</span>';
+  else{const fr=new Date(now);fr.setDate(now.getDate()+5-w);const ms=offAt(my,fr)-now;wk=ms<=0?'<span class="big">下班囉，週末快樂！🎉</span>':'🏖️ 距離週末還有 <span class="big">'+fmtLeft(ms)+'</span>'}
+  const lw=nextLong(my);
+  $("#ban").innerHTML=wk+(lw?'　｜　🎌 '+(lw.ms<=0?'連假中（'+lw.nm+'）':'下個連假 <b>'+lw.nm+'</b> '+f(lw.d)+' 還有 <span class="big">'+fmtLeft(lw.ms)+'</span>（連休 '+lw.L+' 天）'):'')+'<div style="font-size:12px;color:#8a7a68;margin-top:4px">預設 18:00 下班：假期前一天下班後起算放假（可在日期設定「提早下班」）</div>'}
+ $("#board").innerHTML=L.map(p=>({p,x:next(p)})).sort((a,b)=>a.x.ms-b.x.ms).map(({p,x})=>`<div class="p">${avOf(p.avatar)}<div><b>${esc(p.name)}</b>${x.ms<=0?`<span class="big">${x.i==0?'今天放假！':'下班囉，放假啦！'}</span><small>連休 ${x.n} 天 🎈</small>`:x.i<999?`<span class="big">還有 ${fmtLeft(x.ms)}</span><small>${x.d.getMonth()+1}/${x.d.getDate()} ${x.r}・連休 ${x.n} 天</small>`:"<small>近期沒有假期</small>"}</div></div>`).join("")||"<small>還沒有人登島～</small>";
  const y=cur.getFullYear(),m=cur.getMonth();$("#ttl").textContent=`${y} 年 ${m+1} 月`;
  let h="日一二三四五六".split("").map(d=>`<div class="h">${d}</div>`).join("");
  for(let i=0;i<cur.getDay();i++)h+=`<div></div>`;
  const td=ds(new Date());
- for(let d=1,n=new Date(y,m+1,0).getDate();d<=n;d++){const dt=new Date(y,m,d),k=ds(dt),w=dt.getDay(),mine=my&&(my.leaves||[]).includes(k);
-  const who=people.filter(p=>(p.leaves||[]).includes(k)&&!(my&&p.id==my.id)).map(p=>`<span title="${esc(p.name)}">${avOf(p.avatar)}</span>`).join("");
-  h+=`<div class="c ${w%6==0?'we':''} ${HOL[k]?'ho':''} ${mine?'me':''} ${k==td?'td':''} ${k==sel?'sel':''}" data-k="${k}"><b>${d}</b>${HOL[k]?`<i>${HOL[k]}</i>`:""}${mine&&my.dest&&my.dest[k]?`<i style="color:#4f9a5a">→${esc(my.dest[k])}</i>`:""}<div class="dots">${mine?`<span>${avOf(my.avatar)}</span>`:""}${who}</div></div>`}
+ for(let d=1,n=new Date(y,m+1,0).getDate();d<=n;d++){const dt=new Date(y,m,d),k=ds(dt),w=dt.getDay(),mine=my&&(my.leaves||[]).includes(k),bz=my&&(my.biz||[]).includes(k);
+  const who=people.filter(p=>!(my&&p.id==my.id)).map(p=>{const l=(p.leaves||[]).includes(k),b=(p.biz||[]).includes(k);return l||b?`<span class="${b?'b':''}" title="${esc(p.name)}${b?'（出差）':''}">${avOf(p.avatar)}</span>`:""}).join("");
+  h+=`<div class="c ${w%6==0?'we':''} ${HOL[k]?'ho':''} ${mine?'me':''} ${bz?'bz':''} ${k==td?'td':''} ${k==sel?'sel':''}" data-k="${k}"><b>${d}</b>${HOL[k]?`<i>${HOL[k]}</i>`:""}${mine||bz?`<i style="color:${bz?'#2f6fb0':'#4f9a5a'}">${bz?'出差':''}${my.dest&&my.dest[k]?'→'+esc(my.dest[k]):''}</i>`:""}${my&&my.early&&my.early[k]?`<i style="color:#b5651d">${my.early[k]} 下班</i>`:""}<div class="dots">${mine||bz?`<span class="${bz?'b':''}">${avOf(my.avatar)}</span>`:""}${who}</div></div>`}
  $("#cal").innerHTML=h;
  document.querySelectorAll(".c").forEach(e=>e.onclick=()=>{if(!my)return alert("請先在上方設定名字與角色");sel=e.dataset.k;render()});
- const bar=$("#bar");if(sel&&my){const lv=(my.leaves||[]).includes(sel),dd=(my.dest||{})[sel]||"",d=new Date(sel+"T00:00:00");
-  bar.innerHTML=`<div class="row"><b>${sel.slice(5)}（週${"日一二三四五六"[d.getDay()]}）</b><button id="tg" class="${lv?'s':''}">${lv?'取消休假':'設為休假'}</button><input id="ds" maxlength="8" placeholder="這天要去哪？（選填，例如：日本）" value="${esc(dd)}"><button id="sv" class="s">儲存目的地</button></div>`;
-  $("#tg").onclick=()=>{const a=my.leaves=my.leaves||[],i=a.indexOf(sel);if(i<0)a.push(sel);else{a.splice(i,1);if(my.dest)delete my.dest[sel]}save();render()};
+ const bar=$("#bar");if(sel&&my){const lv=(my.leaves||[]).includes(sel),bz=(my.biz||[]).includes(sel),dd=(my.dest||{})[sel]||"",d=new Date(sel+"T00:00:00");
+  bar.innerHTML=`<div class="row"><b>${sel.slice(5)}（週${"日一二三四五六"[d.getDay()]}）</b><button id="tg" class="${lv?'s':''}">${lv?'取消休假':'設為休假'}</button><button id="tb" class="${bz?'s':''}" style="${bz?'':'background:#6aa7e0;box-shadow:0 3px 0 #3f7fba'}">${bz?'取消出差':'設為出差'}</button><select id="er">${["","17:30","17:00","16:30","16:00","15:00","14:00","13:00","12:00"].map(v=>`<option value="${v}" ${(my.early||{})[sel]==v?'selected':''}>${v?v+' 下班':'正常下班'}</option>`).join("")}</select><input id="ds" maxlength="8" placeholder="這天要去哪？（選填，例如：日本、台中）" value="${esc(dd)}"><button id="sv" class="s">儲存地點</button></div>`;
+  const tog=(a,k)=>{const i=a.indexOf(k);i<0?a.push(k):a.splice(i,1);return i<0},cl=()=>{if(my.dest&&!my.leaves.includes(sel)&&!my.biz.includes(sel))delete my.dest[sel]},rm=(a,k)=>{const j=a.indexOf(k);if(j>=0)a.splice(j,1)};
+  $("#tg").onclick=()=>{my.leaves=my.leaves||[];my.biz=my.biz||[];if(tog(my.leaves,sel))rm(my.biz,sel);cl();save();render()};
+  $("#tb").onclick=()=>{my.leaves=my.leaves||[];my.biz=my.biz||[];if(tog(my.biz,sel))rm(my.leaves,sel);cl();save();render()};
+  $("#er").onchange=()=>{my.early=my.early||{};const v=$("#er").value;v?my.early[sel]=v:delete my.early[sel];save();render()};
   $("#sv").onclick=()=>{my.dest=my.dest||{};const v=$("#ds").value.trim();v?my.dest[sel]=v:delete my.dest[sel];save();render()}}else bar.innerHTML=""}
 $("#pv").onclick=()=>{cur.setMonth(cur.getMonth()-1);render()};$("#nx").onclick=()=>{cur.setMonth(cur.getMonth()+1);render()};
 load();setInterval(load,60000);
