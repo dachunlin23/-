@@ -58,12 +58,23 @@ select{padding:10px;border:2px solid #d9cfa5;border-radius:14px;font-size:15px;b
 .c .tl{background:#bfe6bf;color:#1f6b2a}.c .tb{background:#bcd9f5;color:#1f4f85}.c .te{background:#ffd9a0;color:#8a4b0f}
 .dots span{position:relative}.dots span::after{position:absolute;right:-4px;bottom:-4px;font-size:9px;line-height:1}
 .dots .l::after{content:"🌴"}.dots .b::after{content:"🧳"}.dots .e::after{content:"⏰"}.dots .l svg{outline:2px solid #7bc47f;border-radius:50%}
+.sea{position:relative;border-radius:20px;overflow:hidden;padding:30px 8px 54px;background:linear-gradient(#a8dcff 0,#d8f1ff 40%,#8fd0ee 100%);min-height:280px}
+.sea .cd{position:absolute;left:-20%;animation:fl 70s linear infinite;pointer-events:none}
+.isg{display:flex;flex-wrap:wrap;justify-content:center;gap:4px 12px;position:relative}
+.isl{width:190px;cursor:pointer;text-align:center;animation:fy 4.2s ease-in-out infinite}
+.isl:nth-child(2n){margin-top:34px;animation-delay:-1.4s}.isl:nth-child(3n){animation-delay:-2.6s}
+@keyframes fy{50%{transform:translateY(-9px)}}
+.isl svg.is{width:100%;display:block;overflow:visible}.isl .nm{margin-top:-8px}.isl.me .nm{outline:2px solid #f08a24}
+.isl .ch{animation:bob 1.4s ease-in-out infinite}
+#icard{position:absolute;left:50%;transform:translateX(-50%);bottom:10px;width:min(300px,92%);background:#fffdf2;border-radius:16px;padding:10px 14px;box-shadow:0 6px 18px #0003;font-size:13px;display:none}
+#icard.on{display:block}#icard ul{margin:6px 0 0;padding-left:18px}#icard li{margin:2px 0}
+@media(max-width:560px){.isl{width:47%}}
 .c.sel{box-shadow:0 0 0 3px #4a90d9}
 </style></head><body><div class="w">
 <h1>🏝️ 小島放假行事曆</h1>
 <div id="mode" style="text-align:center;font-size:13px;margin:-8px 0 12px;color:#8a7a68"></div>
 <div class="card" id="me"></div>
-<div class="card" style="padding:10px"><div class="row" style="justify-content:space-between"><b>🏘️ 今天的小島村莊</b><button class="s" id="v3t" style="padding:4px 12px">3D／2D</button></div><div class="vil" id="vil" style="margin-top:8px"></div><div id="v3" style="display:none;margin-top:8px"><canvas id="v3c" style="width:100%;display:block;border-radius:16px;touch-action:pan-y"></canvas><small style="color:#8a7a68">左右拖曳可旋轉小島；電腦可用滾輪縮放</small></div></div>
+<div class="card" style="padding:10px"><div class="row" style="justify-content:space-between"><b>🏘️ 今天的小島村莊</b><button class="s" id="v3t" style="padding:4px 12px">3D／2D</button></div><div class="vil" id="vil" style="margin-top:8px"></div><div id="isle" style="display:none;margin-top:8px"></div><div id="v3" style="display:none;margin-top:8px"><canvas id="v3c" style="width:100%;display:block;border-radius:16px;touch-action:pan-y"></canvas><small style="color:#8a7a68">左右拖曳可旋轉小島；電腦可用滾輪縮放</small></div></div>
 <div class="card" id="ban" style="text-align:center;font-size:18px"></div>
 <div class="card"><b>🎉 大家的放假倒數</b><div class="board" id="board" style="margin-top:10px"></div></div>
 <div class="card"><div class="nav"><button class="s" id="pv">◀</button><b id="ttl"></b><button class="s" id="nx">▶</button></div>
@@ -215,7 +226,39 @@ function draw3d(t){const x=V.x,W=V.W,H=V.H;if(!V.drag&&t-V.last>3500)V.ay+=.0015
   if(q.st=="sleep"){x.font="20px sans-serif";x.textAlign="center";x.fillText("💤",p[0]+34,p[1]-h/2-6+Math.sin(t/500)*4)}
   else if(q.st=="sign"&&q.tx&&q.tx.replace("\n"," ")!=q.lb){const ls=q.tx.split("\n"),sh=ls.length*16+8;bx(p[0],p[1]-h/2-sh/2-6,ls,q.bk=="bz"?"#cfe4f7":q.bk=="er"?"#ffe3b8":"#e9c98e",q.bk=="bz"?"#1f4f85":q.bk=="er"?"#8a4b0f":"#5a3a1a",12)}
   else if(q.st=="out"&&q.tx){const fp=P(...q.f);bx(fp[0]+fp[3]*.75,fp[1]-fp[3]*.7,q.tx.split("\n"),q.bk=="bz"?"#4a90d9":"#e8756b","#fff",11)}})}
-function mount3d(){const on=V.on;$("#vil").style.display=on?"none":"";$("#v3").style.display=on?"block":"none";if(on)build3d();$("#v3t").onclick=()=>{V.on=!V.on;localStorage.setItem("vmode",V.on?"3d":"2d");mount3d()}}
+function mount3d(){const m=VM,nm={isle:"🏝️ 島嶼",flat:"🏘️ 平面","3d":"🧊 3D"};$("#vil").style.display=m=="flat"?"":"none";$("#v3").style.display=m=="3d"?"block":"none";$("#isle").style.display=m=="isle"?"block":"none";V.on=m=="3d";if(m=="3d")build3d();if(m=="isle")buildIsle();
+ $("#v3t").textContent=nm[m];$("#v3t").onclick=()=>{VM=VM=="isle"?"flat":VM=="flat"?"3d":"isle";localStorage.setItem("vmode",VM);mount3d()}}
+// ===== 島嶼（每人一座插畫風浮島，不用 3D）=====
+const tw=t=>[...t].reduce((a,c)=>a+(c.charCodeAt(0)>255?10.5:5.8),0);
+const planList=p=>{const t=new Date();t.setHours(0,0,0,0);const lv=p.leaves||[],bz=p.biz||[],dd=p.dest||{},ea=p.early||{},out=[],f=x=>(x.getMonth()+1)+"/"+x.getDate();
+ for(let i=0;i<=30&&out.length<6;i++){const d=new Date(t);d.setDate(t.getDate()+i);const k=ds(d),ty=bz.includes(k)?"b":lv.includes(k)?"l":ea[k]?"e":dd[k]?"d":null;if(!ty)continue;
+  let e=d;if(ty=="b"||ty=="l")for(;;){const n=new Date(e);n.setDate(e.getDate()+1);if((ty=="b"?bz:lv).includes(ds(n)))e=n;else break}
+  out.push(f(d)+(e>d?"–"+f(e):"")+"　"+(ty=="b"?"🧳 出差"+(dd[k]?" "+dd[k]:""):ty=="l"?"🌴 休假"+(dd[k]?"・去"+dd[k]:""):ty=="e"?"⏰ "+ea[k]+" 提早下班":"📍 去"+dd[k]));i+=Math.round((e-d)/864e5)}
+ return out};
+function islSVG(d,st,roof){
+ const tx=(d.tx||"").split("\n"),T=(x,y,t,c,fs)=>`<text x="${x}" y="${y}" font-size="${fs}" font-weight="800" fill="${c}" text-anchor="middle" font-family="sans-serif">${esc(t)}</text>`,
+ ch=(x,y,w)=>fOf(d.av).replace("<svg viewBox",`<svg x="${x}" y="${y}" width="${w}" height="${w*1.3}" viewBox`);
+ let who="",extra="";
+ if(st=="sleep")who=`<g transform="translate(96 88) rotate(-86) translate(-27 -35)">${ch(0,0,54)}</g>`,extra=`<text x="124" y="64" font-size="16" class="zz">💤</text>`;
+ else{who=`<g class="ch">${ch(70,22,58)}</g>`;
+  if(st=="out"){const w=Math.max(30,Math.max(...tx.map(tw))+8),c=d.bk=="bz"?"#4a90d9":"#e8756b";extra=`<g><rect x="118" y="62" width="${w}" height="${tx.length*12+8}" rx="8" fill="${c}" stroke="rgba(0,0,0,.25)" stroke-width="1.5"/>${tx.map((l,i)=>T(118+w/2,75+i*12,l,"#fff",10)).join("")}</g>`}
+  else if(st=="sign"&&tx[0]&&tx.join(" ")!=d.lb){const w=Math.max(...tx.map(tw))+10,h=tx.length*12+8,x0=Math.max(2,78-w),c=d.bk=="bz"?"#cfe4f7":d.bk=="er"?"#ffe3b8":"#e9c98e",f=d.bk=="bz"?"#1f4f85":d.bk=="er"?"#8a4b0f":"#5a3a1a";
+   extra=`<g><rect x="${x0+w/2-1.5}" y="${60+h-2}" width="3" height="18" fill="#8a5a35"/><rect x="${x0}" y="60" width="${w}" height="${h}" rx="6" fill="${c}" stroke="#a9714b" stroke-width="1.5"/>${tx.map((l,i)=>T(x0+w/2,73+i*12,l,f,10)).join("")}</g>`}}
+ const win=st=="sleep"?"#2f3b6a":"#9fd8ff";
+ return `<svg class="is" viewBox="0 0 200 195"><defs><linearGradient id="gg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#b4e27f"/><stop offset="1" stop-color="#6fb34f"/></linearGradient><linearGradient id="rk" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#b98354"/><stop offset="1" stop-color="#6e4529"/></linearGradient></defs>
+<path d="M8 84C10 120 40 140 62 160Q80 180 100 188Q120 180 138 160C160 140 190 120 192 84Z" fill="url(#rk)"/><path d="M30 106Q100 124 170 106M52 130Q100 146 148 130" stroke="#8a5a35" stroke-width="2" fill="none" opacity=".55"/><path d="M80 150Q100 160 120 150" stroke="#e0b285" stroke-width="2" fill="none" opacity=".4"/>
+<ellipse cx="100" cy="80" rx="92" ry="36" fill="#8a5a35"/><ellipse cx="100" cy="72" rx="92" ry="36" fill="url(#gg)"/><ellipse cx="86" cy="60" rx="58" ry="15" fill="#fff" opacity=".16"/>
+<circle cx="52" cy="90" r="2.6" fill="#ff9bb0"/><circle cx="132" cy="94" r="2.6" fill="#ffe066"/><circle cx="70" cy="98" r="2.6" fill="#fff"/><circle cx="160" cy="84" r="2.6" fill="#ff9bb0"/><circle cx="36" cy="80" r="2.4" fill="#ffe066"/>
+<rect x="24" y="46" width="5" height="17" rx="2" fill="#8a5a35"/><circle cx="27" cy="38" r="13" fill="#5fa062"/><circle cx="18" cy="46" r="8" fill="#6fb36f"/><circle cx="36" cy="46" r="8" fill="#79b86a"/>
+<rect x="160" y="22" width="7" height="14" fill="#c97b5a"/><rect x="126" y="40" width="46" height="24" rx="3" fill="#fff4d6"/><path d="M119 43L149 17L179 43Z" fill="${roof}"/><path d="M119 43L149 17L156 23L128 43Z" fill="#fff" opacity=".18"/><rect x="141" y="50" width="12" height="14" rx="6" fill="#a9714b"/><circle cx="162" cy="52" r="6" fill="${win}" stroke="#fff" stroke-width="2"/>
+${who}${extra}</svg>`}
+function buildIsle(){
+ const L=[...document.querySelectorAll("#vil .lot")],cols=["#e8756b","#6aa7e0","#f2b84b","#7fc48a","#b08be0","#f4a261"],
+ cl=(top,dl,sc)=>`<svg class="cd" viewBox="0 0 120 50" style="top:${top}px;width:${120*sc}px;animation-delay:${dl}s"><g fill="#fff" opacity=".92"><ellipse cx="40" cy="32" rx="30" ry="14"/><ellipse cx="68" cy="24" rx="26" ry="18"/><ellipse cx="90" cy="34" rx="24" ry="12"/></g></svg>`;
+ $("#isle").innerHTML=`<div class="sea">${cl(10,0,1)}${cl(130,-30,.7)}${cl(240,-48,.9)}<div class="isg">${L.map((el,i)=>{const d=el.dataset,st=el.className.split(" ")[1];return `<div class="isl ${st} ${d.me=="1"?"me":""}" data-id="${esc(d.id)}">${islSVG(d,st,cols[i%6])}<span class="nm">${esc(d.n)}<small>${esc(d.lb)}</small></span></div>`}).join("")||"<small>島上還沒有居民～先在上方設定名字與角色吧！</small>"}</div><div id="icard"></div></div>`;
+ const card=$("#icard"),show=()=>{const p=V.sel&&((my&&my.id==V.sel)?my:people.find(x=>x.id==V.sel));if(!p){card.className="";return}const L=planList(p);card.className="on";card.innerHTML=`<div class="row" style="justify-content:space-between"><b>${esc(p.name)} 的小島</b><button class="s" id="icx" style="padding:2px 10px">✕</button></div>${L.length?`<ul>${L.map(x=>`<li>${esc(x)}</li>`).join("")}</ul>`:"<div style='margin-top:6px;color:#8a7a68'>30 天內沒有休假、出差或提早下班</div>"}`;$("#icx").onclick=e=>{e.stopPropagation();V.sel=null;show()}};
+ document.querySelectorAll(".isl").forEach(e=>e.onclick=()=>{V.sel=V.sel==e.dataset.id?null:e.dataset.id;show()});show()}
+let VM=({"3d":"3d","2d":"flat",isle:"isle",flat:"flat"})[localStorage.getItem("vmode")]||"isle";
 // ===== 村莊 =====
 function village(L){
  const now=new Date(),t=new Date(now);t.setHours(0,0,0,0);const tm=new Date(t);tm.setDate(t.getDate()+1);const T=ds(t),M=ds(tm),cols=["#e8756b","#6aa7e0","#f2b84b","#7fc48a","#b08be0","#f4a261"];
@@ -234,7 +277,7 @@ function village(L){
   if(st=="work"&&late)lb=(p.early&&p.early[T])?"提早下班 👋":"下班囉 👋";
   const A=avOf(p.avatar),FB=fOf(p.avatar);
   y=st=="sleep"?"":st=="out"?`<div class="pp walk">${FB}<div class="bag ${bk}">${esc(txt)}</div></div>`:st=="sign"?`<div class="pp bob">${FB}</div><div class="sgb ${bk}">${esc(txt)}</div>`:`<div class="pp bob">${FB}</div>`;
-  return `<div class="lot ${st}" data-av="${p.avatar}" data-n="${esc(p.name)}" data-lb="${lb}" data-tx="${esc(txt)}" data-bk="${bk}" data-me="${my&&p.id==my.id?1:0}"><div class="house" style="--c:${cols[i%6]}"><div class="roof"></div><div class="wall"><div class="door"></div><div class="win">${st=="sleep"?`<div class="bed">${A}</div>`:""}</div>${st=="sleep"?'<b class="z">💤</b>':""}</div></div><div class="yard">${y}</div><span class="nm">${esc(p.name)}<small>${lb}</small></span></div>`};
+  return `<div class="lot ${st}" data-av="${p.avatar}" data-n="${esc(p.name)}" data-lb="${lb}" data-tx="${esc(txt)}" data-bk="${bk}" data-me="${my&&p.id==my.id?1:0}" data-id="${esc(p.id)}"><div class="house" style="--c:${cols[i%6]}"><div class="roof"></div><div class="wall"><div class="door"></div><div class="win">${st=="sleep"?`<div class="bed">${A}</div>`:""}</div>${st=="sleep"?'<b class="z">💤</b>':""}</div></div><div class="yard">${y}</div><span class="nm">${esc(p.name)}<small>${lb}</small></span></div>`};
  $("#vil").innerHTML=`<span class="cl">☁️</span><span class="cl" style="top:14px;animation-delay:-25s;font-size:24px">☁️</span><span class="dc" style="left:1%;top:34%">🌳</span><span class="dc" style="right:1%;top:40%">🌲</span><div class="vg">${L.length?L.map(lot).join(""):"<small>村莊還沒有居民～先在上方設定名字與角色吧！</small>"}</div>`}
 // ===== 畫面 =====
 function render(){
